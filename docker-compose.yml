@@ -1,0 +1,18 @@
+version: '2.1'
+
+services:
+  postgres:
+    image: mdillon/postgis:9.6-alpine
+    healthcheck:
+      test: nc -zv 127.0.0.1 5433
+      interval: 15s
+
+  api:
+    healthcheck:
+      test: nc -zv duckduckgo.com 80
+      interval: 15s
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - $PWD:/opt/xml_ingest

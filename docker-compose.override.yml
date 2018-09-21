@@ -1,0 +1,30 @@
+version: '2.1'
+
+services:
+  postgres:
+    environment:
+      - PGHOST=localhost
+      - PGPORT=5433
+      - PGPASSWORD=docker
+      - PGUSER=docker
+      - PGDATABASE=xml_ingest
+    ports:
+      - 5433:5433
+
+  api:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.dev
+    # command: python3 -c 'from time import sleep; print("sleeping"); sleep(10000);'
+    command: cargo run
+    environment:
+      - ROCKET_ADDRESS=0.0.0.0
+      - ROCKET_PORT=10000
+      - PGHOST=localhost
+      - PGPORT=5433
+      - PGPASSWORD=docker
+      - PGUSER=docker
+      - PGDATABASE=xml_ingest
+    ports:
+      - 5000:5000
+      - 12000:12000

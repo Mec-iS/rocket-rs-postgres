@@ -1,0 +1,47 @@
+FROM ubuntu:bionic
+
+ENV PG_MAJOR 10
+ENV LC_ALL C.UTF-8
+ENV LANG C.UTF-8
+
+RUN apt-get update
+RUN apt-get -y upgrade
+
+# Install PG repository
+RUN apt-get install -y wget build-essential software-properties-common curl pkg-config \
+                       libssh-dev cmake
+
+# python3-minimal
+
+RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+
+RUN apt-get update
+
+RUN apt-get install -y postgresql-client-$PG_MAJOR
+
+
+ENV RUSTUP_HOME=/usr/local/rustup \
+    CARGO_HOME=/usr/local/cargo \
+    PATH=/usr/local/cargo/bin:$PATH
+
+RUN set -eux; \
+    \
+    url="https://static.rust-lang.org/rustup/dist/x86_64-unknown-linux-gnu/rustup-init"; \
+    wget "$url"; \
+    chmod +x rustup-init; \
+    ./rustup-init -y --no-modify-path --default-toolchain nightly; \
+    rm rustup-init; \
+    chmod -R a+w $RUSTUP_HOME $CARGO_HOME; \
+    rustup --version; \
+    cargo --version; \
+    rustc --version;
+
+WORKDIR /opt/xml_ingest
+
+CMD ["cargo", "build"]
+
+#ENV TERM linux
+#ENV TERMINFO /etc/terminfo
+
+
