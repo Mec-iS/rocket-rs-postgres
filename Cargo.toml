@@ -1,0 +1,16 @@
+[package]
+name = "xml-ingest"
+version = "0.1.0"
+authors = ["Lorenzo Moriondo <tunedconsulting@gmail.com>"]
+
+[dependencies]
+serde = "1.0.79"
+serde_derive = "1.0.79"
+rocket = "0.3.16"
+rocket_codegen = "0.3.16"
+postgres = "0.15.2"
+
+[dependencies.rocket_contrib]
+version = "*"
+default-features = false
+features = ["json"]
